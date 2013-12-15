@@ -10,7 +10,7 @@ COMPLETION_WAITING_DOTS="true"
 
 # Which plugins would you like to load? (plugins can be found in ~/.zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git compete)
+plugins=(git contest)
 
 source $ZSH/zsh.sh
 
