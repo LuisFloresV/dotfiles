@@ -2,13 +2,12 @@
 # me@luisflores.mx
 #
 
+RED='\e[4;31m'
+GREEN='\e[4;32m'
+BLUE='\e[4;34m'
+NC='\e[0m' # No Color
+
 function c {
-
-	RED='\e[4;31m'
-	GREEN='\e[4;32m'
-	BLUE='\e[4;34m'
-	NC='\e[0m' # No Color
-
 	FILE="$1.cpp"
 
 	echo $FILE
@@ -27,12 +26,13 @@ function c {
 	# Check if input file exists
 	if [ -f "$1.input" ]
 	then
-		# Execute and save the output
+		# Redirect output from input file to the binary and save the output
     	OUTPUT=$(cat $1.input | ./a.out)
 	else
-		echo -e "${RED}** $1.input not found!! **${NC}"
-		rm a.out
-	    return
+		echo -e "${RED}**File $1.input not found! Enter input manually **${NC}"
+		echo
+		# Enter data manually
+		OUTPUT=$(./a.out)
 	fi
 
 	# Check if output file exists
@@ -48,19 +48,26 @@ function c {
 	    return
 	fi
 
+	# Check diff status 
+	# $OUT == 0, No differences
+	# $OUT != 0, Some differences
 	if [ $OUT -eq 0 ]
 	then
 		echo -e "${GREEN}**** ACCEPTED! ****${NC}"
-	    return
 	else
 		echo -e "${BLUE}************* OUTPUT *************${NC}"
 		echo $OUTPUT
-		echo -e "${BLUE}************** DIFF **************${NC}"
+		echo -e "${RED}************** DIFF **************${NC}"
 		echo "$DIFF"
 		echo -e "${RED}**** WRONG ANSWER! ****${NC}"
-	    return
 	fi
 
-    # Remove binary
     rm a.out
+}
+
+function create {
+	mkdir "$1"
+	touch "$1/$1.cpp"
+	touch "$1/$1.input"
+	touch "$1/$1.output"
 }
