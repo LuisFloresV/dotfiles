@@ -71,3 +71,8 @@ function create {
 	touch "$1/$1.input"
 	touch "$1/$1.output"
 }
+
+function clean {
+	mv $1/$1.cpp .
+	rm -rf $1
+}
