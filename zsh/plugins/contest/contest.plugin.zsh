@@ -5,15 +5,16 @@
 RED='\e[4;31m'
 GREEN='\e[4;32m'
 BLUE='\e[4;34m'
+YELLOW_BACKGROUND='\e[43m'
+YELLOW='\e[4;33m'
 NC='\e[0m' # No Color
 
 function c {
-	FILE="$1.cpp"
-
-	echo $FILE
+	FILENAME="$1/$1"
+	FILE="$FILENAME.cpp"
 
     # Compile with c++11 flag
-    c++ -std=c++11 "$FILE"
+    c++ -std=c++11 $FILE -o $1/a.out
     # Save return status
     OUT=$?
 
@@ -24,27 +25,27 @@ function c {
 	fi
 	
 	# Check if input file exists
-	if [ -f "$1.input" ]
+	if [ -f "$FILENAME.input" ]
 	then
 		# Redirect output from input file to the binary and save the output
-    	OUTPUT=$(cat $1.input | ./a.out)
+    	OUTPUT=$(cat $FILENAME.input | $1/a.out)
 	else
 		echo -e "${RED}**File $1.input not found! Enter input manually **${NC}"
 		echo
 		# Enter data manually
-		OUTPUT=$(./a.out)
+		OUTPUT=$($1/a.out)
 	fi
 
 	# Check if output file exists
-	if [ -f "$1.output" ]
+	if [ -f "$FILENAME.output" ]
 	then
-		DIFF=$(diff <(echo "$OUTPUT") "$1.output")
+		DIFF=$(diff <(echo "$OUTPUT") "$FILENAME.output")
 		OUT=$?
 	else
 		echo -e "${RED}** $1.output not found!! **${NC}"
 		echo -e "${BLUE}************* OUTPUT *************${NC}"
 		echo $OUTPUT
-		rm a.out
+		rm $1/a.out
 	    return
 	fi
 
@@ -57,12 +58,14 @@ function c {
 	else
 		echo -e "${BLUE}************* OUTPUT *************${NC}"
 		echo $OUTPUT
-		echo -e "${RED}************** DIFF **************${NC}"
-		echo "$DIFF"
+		echo -e "${YELLOW}************** DIFF **************${NC}"
+		echo
+		echo "${YELLOW_BACKGROUND}$DIFF${NC}"
+		echo
 		echo -e "${RED}**** WRONG ANSWER! ****${NC}"
 	fi
 
-    rm a.out
+    rm $1/a.out
 }
 
 function create {
