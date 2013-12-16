@@ -5,8 +5,9 @@
 RED='\e[4;31m'
 GREEN='\e[4;32m'
 BLUE='\e[4;34m'
-YELLOW_BACKGROUND='\e[43m'
-YELLOW='\e[4;33m'
+YELLOW='\e[0;33m'
+UYELLOW='\e[4;33m'
+WHITE='\e[0;37m'
 NC='\e[0m' # No Color
 
 function c {
@@ -30,10 +31,18 @@ function c {
 		# Redirect output from input file to the binary and save the output
     	OUTPUT=$(cat $FILENAME.input | $1/a.out)
 	else
-		echo -e "${RED}**File $1.input not found! Enter input manually **${NC}"
+		echo -e "${UYELLOW}**File $1.input not found! Enter input manually **${NC}"
 		echo
 		# Enter data manually
 		OUTPUT=$($1/a.out)
+	fi
+
+	OUT=$?
+
+	if [ $OUT != 0 ]
+	then
+		echo -e "${RED}************* CRASH??!! *************${NC}"
+	    return
 	fi
 
 	# Check if output file exists
@@ -56,12 +65,10 @@ function c {
 	then
 		echo -e "${GREEN}**** ACCEPTED! ****${NC}"
 	else
+		echo -e "${UYELLOW}************** DIFF **************${NC}"
+		echo "${WHITE}$DIFF${NC}"
 		echo -e "${BLUE}************* OUTPUT *************${NC}"
-		echo $OUTPUT
-		echo -e "${YELLOW}************** DIFF **************${NC}"
-		echo
-		echo "${YELLOW_BACKGROUND}$DIFF${NC}"
-		echo
+		echo "${WHITE}$OUTPUT${NC}"
 		echo -e "${RED}**** WRONG ANSWER! ****${NC}"
 	fi
 
