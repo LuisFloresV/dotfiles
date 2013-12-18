@@ -4,7 +4,8 @@
 
 RED='\e[4;31m'
 GREEN='\e[4;32m'
-BLUE='\e[4;34m'
+BLUE='\e[0;34m'
+UBLUE='\e[4;34m'
 YELLOW='\e[0;33m'
 UYELLOW='\e[4;33m'
 WHITE='\e[0;37m'
@@ -21,7 +22,7 @@ function c {
 
     if [ $OUT != 0 ]
 	then
-		echo -e "${RED}************* COMPILATION ERROR!! *************${NC}"
+		echo -e "${RED}*** COMPILATION ERROR!! ***${NC}"
 	    return
 	fi
 	
@@ -29,7 +30,7 @@ function c {
 	if [ -f "$FILENAME.input" ]
 	then
 		# Redirect output from input file to the binary and save the output
-    	OUTPUT=$(cat $FILENAME.input | $1/a.out)
+    	OUTPUT=$(cat $FILENAME.input | time $1/a.out)
 	else
 		echo -e "${UYELLOW}**File $1.input not found! Enter input manually **${NC}"
 		echo
@@ -41,7 +42,7 @@ function c {
 
 	if [ $OUT != 0 ]
 	then
-		echo -e "${RED}************* CRASH??!! *************${NC}"
+		echo -e "${RED}*** CRASH??!! ***${NC}"
 	    return
 	fi
 
@@ -52,7 +53,7 @@ function c {
 		OUT=$?
 	else
 		echo -e "${RED}** $1.output not found!! **${NC}"
-		echo -e "${BLUE}************* OUTPUT *************${NC}"
+		echo -e "${BLUE}*** YOUR OUTPUT ***${NC}"
 		echo $OUTPUT
 		rm $1/a.out
 	    return
@@ -63,13 +64,26 @@ function c {
 	# $OUT != 0, Some differences
 	if [ $OUT -eq 0 ]
 	then
-		echo -e "${GREEN}**** ACCEPTED! ****${NC}"
+		echo "${GREEN}*** ACCEPTED! ***${NC}"
 	else
-		echo -e "${UYELLOW}************** DIFF **************${NC}"
+		echo
+		echo "${YELLOW}-------- DIFF --------${NC}"
 		echo "${WHITE}$DIFF${NC}"
-		echo -e "${BLUE}************* OUTPUT *************${NC}"
+		echo "${YELLOW}----------------------${NC}"
+		echo
+		echo "${YELLOW}-------- INPUT --------${NC}"
+		echo "${WHITE}$(cat $FILENAME.input)${NC}"	
+		echo "${YELLOW}-----------------------${NC}"	
+		echo
+		echo "${BLUE}----- YOUR OUTPUT -----${NC}"
 		echo "${WHITE}$OUTPUT${NC}"
-		echo -e "${RED}**** WRONG ANSWER! ****${NC}"
+		echo "${BLUE}-----------------------${NC}"
+		echo
+		echo "${BLUE}--- EXPECTED OUTPUT ---${NC}"
+		echo "${WHITE}$(cat $FILENAME.output)${NC}"
+		echo "${BLUE}-----------------------${NC}"
+		echo
+		echo "${RED}**** WRONG ANSWER! ****${NC}"
 	fi
 
     rm $1/a.out
