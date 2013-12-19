@@ -5,4 +5,6 @@ It's all I need for now.
 
 I also created my own plugin for testing C++ code for programming contests, it has been saving me a lot of time.
 
+![Console](console.png)
+
 ## Installation
