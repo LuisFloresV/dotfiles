@@ -2,6 +2,11 @@
 # me@luisflores.mx
 #
 
+## CONFIGURATION ##
+TEMPLATE=true
+TEMPLATE_PATH="/Users/Luis/Developer/Competitive-Programming/template.cpp"
+
+
 RED='\e[4;31m'
 GREEN='\e[4;32m'
 BLUE='\e[0;34m'
@@ -17,7 +22,7 @@ function c {
 	# Check if source file exists
 	if [ -f "$FILE_PATH.cpp" ]; then
 		# Compile with c++11 flag
-	    c++ -std=c++11 $FILE_PATH.cpp -o $FILE_PATH.out
+	    c++ -std=c++11 $FILE_PATH.cpp -o $FILE_PATH.out -Wall -DJUDGE
 	    
 	    # Check return status
     	if [ $? != 0 ]; then
@@ -33,7 +38,6 @@ function c {
 	if [ -f "$FILE_PATH.input" ]; then
 		# Redirect output from input file to the binary and save the output
     	OUTPUT=$(cat $FILE_PATH.input | time $FILE_PATH.out)
-    	echo $OUTPUT
 	else
 		echo "${UYELLOW}**File $1.input not found! Enter input manually **${NC}"
 		echo
@@ -90,9 +94,14 @@ function c {
 
 function create {
 	mkdir "$1"
-	touch "$1/$1.cpp"
 	touch "$1/$1.input"
 	touch "$1/$1.output"
+
+	if [ $TEMPLATE ]; then
+		cp $TEMPLATE_PATH $1/$1.cpp
+	else
+		touch "$1/$1.cpp"
+	fi
 }
 
 function clean {
