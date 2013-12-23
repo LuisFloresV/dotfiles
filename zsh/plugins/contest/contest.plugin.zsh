@@ -12,58 +12,57 @@ WHITE='\e[0;37m'
 NC='\e[0m' # No Color
 
 function c {
-	FILENAME="$1/$1"
-	FILE="$FILENAME.cpp"
+	FILE_PATH="$1/$1"
 
-    # Compile with c++11 flag
-    c++ -std=c++11 $FILE -o $1/a.out
-    # Save return status
-    OUT=$?
-
-    if [ $OUT != 0 ]
-	then
-		echo -e "${RED}*** COMPILATION ERROR!! ***${NC}"
-	    return
+	# Check if source file exists
+	if [ -f "$FILE_PATH.cpp" ]; then
+		# Compile with c++11 flag
+	    c++ -std=c++11 $FILE_PATH.cpp -o $FILE_PATH.out
+	    
+	    # Check return status
+    	if [ $? != 0 ]; then
+			echo "${RED}*** COMPILATION ERROR!! ***${NC}"
+	    	return
+		fi
+	else
+		echo "${RED}** $1.cpp not found!! **${NC}"
+		return
 	fi
 	
 	# Check if input file exists
-	if [ -f "$FILENAME.input" ]
-	then
+	if [ -f "$FILE_PATH.input" ]; then
 		# Redirect output from input file to the binary and save the output
-    	OUTPUT=$(cat $FILENAME.input | time $1/a.out)
+    	OUTPUT=$(cat $FILE_PATH.input | time $FILE_PATH.out)
+    	echo $OUTPUT
 	else
-		echo -e "${UYELLOW}**File $1.input not found! Enter input manually **${NC}"
+		echo "${UYELLOW}**File $1.input not found! Enter input manually **${NC}"
 		echo
 		# Enter data manually
-		OUTPUT=$($1/a.out)
+		OUTPUT=$($FILE_PATH.out)
 	fi
 
-	OUT=$?
-
-	if [ $OUT != 0 ]
-	then
-		echo -e "${RED}*** CRASH??!! ***${NC}"
+	if [ $? != 0 ]; then
+		echo "${RED}*** CRASH??!! ***${NC}"
+		rm $FILE_PATH.out
 	    return
 	fi
 
 	# Check if output file exists
-	if [ -f "$FILENAME.output" ]
-	then
-		DIFF=$(diff <(echo "$OUTPUT") "$FILENAME.output")
-		OUT=$?
+	if [ -f "$FILE_PATH.output" ]; then
+		DIFF=$(diff <(echo "$OUTPUT") "$FILE_PATH.output")
 	else
-		echo -e "${RED}** $1.output not found!! **${NC}"
-		echo -e "${BLUE}*** YOUR OUTPUT ***${NC}"
+		echo "${YELLOW}** $1.output not found!! **${NC}"
+		echo "${BLUE}*** YOUR OUTPUT ***${NC}"
 		echo $OUTPUT
-		rm $1/a.out
+		rm $FILE_PATH.out
 	    return
 	fi
 
 	# Check diff status 
 	# $OUT == 0, No differences
 	# $OUT != 0, Some differences
-	if [ $OUT -eq 0 ]
-	then
+
+	if [ $? = 0 ]; then
 		echo "${GREEN}*** ACCEPTED! ***${NC}"
 	else
 		echo
@@ -72,7 +71,7 @@ function c {
 		echo "${YELLOW}----------------------${NC}"
 		echo
 		echo "${YELLOW}-------- INPUT --------${NC}"
-		echo "${WHITE}$(cat $FILENAME.input)${NC}"	
+		echo "${WHITE}$(cat $FILE_PATH.input)${NC}"	
 		echo "${YELLOW}-----------------------${NC}"	
 		echo
 		echo "${BLUE}----- YOUR OUTPUT -----${NC}"
@@ -80,13 +79,13 @@ function c {
 		echo "${BLUE}-----------------------${NC}"
 		echo
 		echo "${BLUE}--- EXPECTED OUTPUT ---${NC}"
-		echo "${WHITE}$(cat $FILENAME.output)${NC}"
+		echo "${WHITE}$(cat $FILE_PATH.output)${NC}"
 		echo "${BLUE}-----------------------${NC}"
 		echo
 		echo "${RED}**** WRONG ANSWER! ****${NC}"
 	fi
 
-    rm $1/a.out
+    rm $FILE_PATH.out
 }
 
 function create {
