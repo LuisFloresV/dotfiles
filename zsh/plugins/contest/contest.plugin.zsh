@@ -7,6 +7,7 @@ TEMPLATE=true
 TEMPLATE_PATH="/Users/Luis/Developer/Competitive-Programming/template.cpp"
 ###################
 
+## GLOBAL VARIABLES ##
 RED='\e[0;31m'
 URED='\e[4;31m'
 GREEN='\e[0;32m'
@@ -18,6 +19,10 @@ UYELLOW='\e[4;33m'
 WHITE='\e[0;37m'
 NC='\e[0m' # No Color
 
+OK="${GREEN}OK${NC}"
+NO="${RED}NO${NC}"
+#######################
+
 function c {
 	FILE_PATH="$1/$1"
 
@@ -25,14 +30,14 @@ function c {
 	if [ -f "$FILE_PATH.cpp" ]; then
 		# Compile with c++11 flag
 	    c++ -std=c++11 $FILE_PATH.cpp -o $FILE_PATH.out -Wall -DJUDGE
-	    
+
 	    # Check return status
-    	if [ $? != 0 ]; then
-			echo "${RED}*** COMPILATION ERROR!! ***${NC}"
+        if [ ! -f $FILE_PATH.out ]; then
+            echo "${RED}*** COMPILATION ERROR!! ***${NC}"
 	    	return
 		fi
 	else
-		echo "${RED}** $1.cpp not found!! **${NC}"
+		echo "${RED}** $FILE_PATH.cpp not found!! **${NC}"
 		return
 	fi
 	
@@ -96,41 +101,46 @@ function c {
 
 function create {
 	mkdir "$1"
-	STATEMENT="Create folder $1"
+	STATEMENT="Creating folder $1"
 	printPad $STATEMENT
 
 	touch "$1/$1.input"
-	STATEMENT="Create file $1/$1.input"
+	STATEMENT="Creating file $1/$1.input"
 	printPad $STATEMENT
 
 	touch "$1/$1.output"
-	STATEMENT="Create file $1/$1.output"
+	STATEMENT="Creating file $1/$1.output"
 	printPad $STATEMENT
+
+	STATEMENT="Copying template file"
 
 	if [ $TEMPLATE ]; then
 		if [ -f $TEMPLATE_PATH ]; then
 			cp $TEMPLATE_PATH $1/$1.cpp
-			STATEMENT="Copy template file"
 			printPad $STATEMENT
 		else
-			STATEMENT="Copy template file"
-			printPad $STATEMENT "${RED}NO${NC}"
+			printPad $STATEMENT $NO
 			touch "$1/$1.cpp"
-			STATEMENT="Create file $1/$1.cpp"
+			STATEMENT="Creating file $1/$1.cpp"
 			printPad $STATEMENT
 			echo
 			echo "${YELLOW}** Template file not found, please check template file path **${NC}"
 		fi
 	else
 		touch "$1/$1.cpp"
-		STATEMENT="Create file $1/$1.cpp"
+		STATEMENT="Creating file $1/$1.cpp"
 		printPad $STATEMENT
 	fi
 }
 
 function clean {
 	mv $1/$1.cpp .
+	STATEMENT="Moving file $1/$1.cpp"
+	printPad $STATEMENT
+
 	rm -rf $1
+	STATEMENT="Removing folder $1"
+	printPad $STATEMENT
 }
 
 # Helper methods
@@ -138,9 +148,9 @@ function clean {
 function printPad() {
 	if [ -z "$2" ]; then
 		if [ $? = 0 ]; then
-			STATUS="${GREEN}OK${NC}"
+			STATUS="$OK"
 		else
-			STATUS="${RED}NO${NC}"
+			STATUS="$NO"
 		fi
 	else
 		STATUS=$2
