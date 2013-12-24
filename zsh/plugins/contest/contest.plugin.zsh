@@ -5,10 +5,12 @@
 ## CONFIGURATION ##
 TEMPLATE=true
 TEMPLATE_PATH="/Users/Luis/Developer/Competitive-Programming/template.cpp"
+###################
 
-
-RED='\e[4;31m'
-GREEN='\e[4;32m'
+RED='\e[0;31m'
+URED='\e[4;31m'
+GREEN='\e[0;32m'
+UGREEN='\e[4;32m'
 BLUE='\e[0;34m'
 UBLUE='\e[4;34m'
 YELLOW='\e[0;33m'
@@ -67,7 +69,7 @@ function c {
 	# $OUT != 0, Some differences
 
 	if [ $? = 0 ]; then
-		echo "${GREEN}*** ACCEPTED! ***${NC}"
+		echo "${UGREEN}*** ACCEPTED! ***${NC}"
 	else
 		echo
 		echo "${YELLOW}-------- DIFF --------${NC}"
@@ -86,7 +88,7 @@ function c {
 		echo "${WHITE}$(cat $FILE_PATH.output)${NC}"
 		echo "${BLUE}-----------------------${NC}"
 		echo
-		echo "${RED}**** WRONG ANSWER! ****${NC}"
+		echo "${URED}**** WRONG ANSWER! ****${NC}"
 	fi
 
     rm $FILE_PATH.out
@@ -94,17 +96,57 @@ function c {
 
 function create {
 	mkdir "$1"
+	STATEMENT="Create folder $1"
+	printPad $STATEMENT
+
 	touch "$1/$1.input"
+	STATEMENT="Create file $1/$1.input"
+	printPad $STATEMENT
+
 	touch "$1/$1.output"
+	STATEMENT="Create file $1/$1.output"
+	printPad $STATEMENT
 
 	if [ $TEMPLATE ]; then
-		cp $TEMPLATE_PATH $1/$1.cpp
+		if [ -f $TEMPLATE_PATH ]; then
+			cp $TEMPLATE_PATH $1/$1.cpp
+			STATEMENT="Copy template file"
+			printPad $STATEMENT
+		else
+			STATEMENT="Copy template file"
+			printPad $STATEMENT "${RED}NO${NC}"
+			touch "$1/$1.cpp"
+			STATEMENT="Create file $1/$1.cpp"
+			printPad $STATEMENT
+			echo
+			echo "${YELLOW}** Template file not found, please check template file path **${NC}"
+		fi
 	else
 		touch "$1/$1.cpp"
+		STATEMENT="Create file $1/$1.cpp"
+		printPad $STATEMENT
 	fi
 }
 
 function clean {
 	mv $1/$1.cpp .
 	rm -rf $1
+}
+
+# Helper methods
+
+function printPad() {
+	if [ -z "$2" ]; then
+		if [ $? = 0 ]; then
+			STATUS="${GREEN}OK${NC}"
+		else
+			STATUS="${RED}NO${NC}"
+		fi
+	else
+		STATUS=$2
+	fi
+
+	PAD=$(printf '%0.1s' "."{1..80})
+	PADLENGTH=80
+	printf "${WHITE} %s %*.*s ${NC}[ %b ]\n" "$1" 0 $((PADLENGTH - ${#1} - ${#STATUS} )) "$PAD" "$STATUS"
 }
