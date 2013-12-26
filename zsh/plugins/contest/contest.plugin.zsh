@@ -4,7 +4,7 @@
 
 ## CONFIGURATION ##
 TEMPLATE=true
-TEMPLATE_PATH="/Users/Luis/Developer/Competitive-Programming/template.cpp"
+TEMPLATE_PATH="template.cpp"
 
 # USACO
 USACO_USERNAME="aklovo1"
@@ -40,9 +40,9 @@ function c {
         # Compile with c++11 flag
         if [ $COMPILATION_FLAG ] && [ $COMPILATION_FLAG = "1" ]; then
             # Compile with JUDGE flag (debug purpose)
-            c++ -std=c++11 $FILE_PATH.cpp -o $FILE_PATH.out -Wall -DJUDGE
-        else
             c++ -std=c++11 $FILE_PATH.cpp -o $FILE_PATH.out -Wall
+        else
+            c++ -std=c++11 $FILE_PATH.cpp -o $FILE_PATH.out -Wall -DJUDGE
         fi
 
         # Check return status
@@ -58,7 +58,7 @@ function c {
     # Check if input file exists
     if [ -f "$FILE_PATH.input" ]; then
         # Redirect output from input file to the binary and save the output
-        OUTPUT=$(cat $FILE_PATH.input | time $FILE_PATH.out)
+        OUTPUT=$(cat $FILE_PATH.input | time $FILE_PATH.out 2> $1/log.txt)
     else
         echo "${UYELLOW}**File $1.input not found! Enter input manually **${NC}"
         echo
@@ -115,8 +115,24 @@ function c {
 }
 
 function create {
-
+    # ARGUMENTS SUPPORTED:
+    # - USACO (It will create the header)
     FORMAT=$2
+
+    if [ -d "$1" ]; then
+        printf "${WHITE} Destination folder already exists, do you want to override? [Y,n] ${NC}"
+        while true; do
+            read yn
+            case $yn in
+                [Yy]* ) rm -rf $1; 
+                        STATEMENT="Removing folder $1"; 
+                        printPad $STATEMENT; 
+                        break;;
+                [Nn]* ) return;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+    fi
 
     mkdir "$1"
     STATEMENT="Creating folder $1"
@@ -136,7 +152,10 @@ function create {
         if [ -f $TEMPLATE_PATH ]; then
             if [ $FORMAT ] && [ $FORMAT = "USACO" ]; then
                 printHeaderUSACO $1 >> $1/$1.cpp 
-                cat $TEMPLATE_PATH >> $1/$1.cpp
+                # Linux: head -n -1 $TEMPLATE_PATH >> $1/$1.cpp
+                # Mac OS
+                sed -e :a -e '$d;N;1ba' -e 'P;D' $TEMPLATE_PATH >> $1/$1.cpp
+                printFooterUSACO $1 >> $1/$1.cpp
             else
                 cp $TEMPLATE_PATH $1/$1.cpp
             fi
@@ -191,4 +210,12 @@ function printHeaderUSACO {
     echo "PROG: $1"
     echo "LANG: $USACO_LANGUAJE"
     echo "*/"
+}
+
+function printFooterUSACO {
+    echo "    #ifndef JUDGE"
+    echo "        READ(\"$1.in\");"
+    echo "        WRITE(\"$1.out\");"
+    echo "    #endif"
+    echo "}"
 }
