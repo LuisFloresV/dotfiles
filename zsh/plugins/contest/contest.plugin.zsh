@@ -63,8 +63,10 @@ function c {
         echo "${UYELLOW}**File $1.input not found! Enter input manually **${NC}"
         echo
         # Enter data manually
-        OUTPUT=$($FILE_PATH.out)
+        OUTPUT=$(time $FILE_PATH.out 2> $1/log.txt)
     fi
+
+    LOG=$(cat $1/log.txt)
 
     if [ $? != 0 ]; then
         # assert, crash, etc?
@@ -102,11 +104,13 @@ function c {
         echo
         echo "${BLUE}----- YOUR OUTPUT -----${NC}"
         echo "${WHITE}$OUTPUT${NC}"
+        echo "${BLUE}--------- LOG ---------${NC}"
+        echo "${WHITE}$LOG${NC}"
         echo "${BLUE}-----------------------${NC}"
         echo
-        echo "${BLUE}--- EXPECTED OUTPUT ---${NC}"
+        echo "${GREEN}--- EXPECTED OUTPUT ---${NC}"
         echo "${WHITE}$(cat $FILE_PATH.output)${NC}"
-        echo "${BLUE}-----------------------${NC}"
+        echo "${GREEN}-----------------------${NC}"
         echo
         echo "${URED}**** WRONG ANSWER! ****${NC}"
     fi
