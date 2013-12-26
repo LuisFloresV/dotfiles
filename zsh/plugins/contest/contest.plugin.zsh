@@ -5,6 +5,10 @@
 ## CONFIGURATION ##
 TEMPLATE=true
 TEMPLATE_PATH="/Users/Luis/Developer/Competitive-Programming/template.cpp"
+
+# USACO
+USACO_USERNAME="aklovo1"
+USACO_LANGUAJE="C++11"
 ###################
 
 ## GLOBAL VARIABLES ##
@@ -111,6 +115,9 @@ function c {
 }
 
 function create {
+
+    FORMAT=$2
+
     mkdir "$1"
     STATEMENT="Creating folder $1"
     printPad $STATEMENT
@@ -127,7 +134,13 @@ function create {
 
     if [ $TEMPLATE ]; then
         if [ -f $TEMPLATE_PATH ]; then
-            cp $TEMPLATE_PATH $1/$1.cpp
+            if [ $FORMAT ] && [ $FORMAT = "USACO" ]; then
+                printHeaderUSACO $1 >> $1/$1.cpp 
+                cat $TEMPLATE_PATH >> $1/$1.cpp
+            else
+                cp $TEMPLATE_PATH $1/$1.cpp
+            fi
+
             printPad $STATEMENT
         else
             printPad $STATEMENT $NO
@@ -170,4 +183,12 @@ function printPad {
     PAD=$(printf '%0.1s' "."{1..80})
     PADLENGTH=80
     printf "${WHITE} %s %*.*s ${NC}[ %b ]\n" "$1" 0 $((PADLENGTH - ${#1} - ${#STATUS} )) "$PAD" "$STATUS"
+}
+
+function printHeaderUSACO {
+    echo "/*"
+    echo "ID: $USACO_USERNAME"
+    echo "PROG: $1"
+    echo "LANG: $USACO_LANGUAJE"
+    echo "*/"
 }
