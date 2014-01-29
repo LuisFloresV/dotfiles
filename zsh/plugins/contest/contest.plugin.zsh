@@ -54,7 +54,7 @@ function c {
         echo "${RED}** $FILE_PATH.cpp not found!! **${NC}"
         return
     fi
-    
+
     # Check if input file exists
     if [ -f "$FILE_PATH.input" ]; then
         # Redirect output from input file to the binary and save the output
@@ -86,7 +86,7 @@ function c {
         return
     fi
 
-    # Check diff status 
+    # Check diff status
     # $OUT == 0, No differences
     # $OUT != 0, Some differences
 
@@ -99,8 +99,8 @@ function c {
         echo "${YELLOW}----------------------${NC}"
         echo
         echo "${YELLOW}-------- INPUT --------${NC}"
-        echo "${WHITE}$(cat $FILE_PATH.input)${NC}" 
-        echo "${YELLOW}-----------------------${NC}"    
+        echo "${WHITE}$(cat $FILE_PATH.input)${NC}"
+        echo "${YELLOW}-----------------------${NC}"
         echo
         echo "${BLUE}----- YOUR OUTPUT -----${NC}"
         echo "${WHITE}$OUTPUT${NC}"
@@ -128,9 +128,9 @@ function create {
         while true; do
             read yn
             case $yn in
-                [Yy]* ) rm -rf $1; 
-                        STATEMENT="Removing folder $1"; 
-                        printPad $STATEMENT; 
+                [Yy]* ) rm -rf $1;
+                        STATEMENT="Removing folder $1";
+                        printPad $STATEMENT;
                         break;;
                 [Nn]* ) return;;
                 * ) echo "Please answer yes or no.";;
@@ -155,7 +155,7 @@ function create {
     if [ $TEMPLATE ]; then
         if [ -f $TEMPLATE_PATH ]; then
             if [ $FORMAT ] && [ $FORMAT = "USACO" ]; then
-                printHeaderUSACO $1 >> $1/$1.cpp 
+                printHeaderUSACO $1 >> $1/$1.cpp
                 # Linux: head -n -1 $TEMPLATE_PATH >> $1/$1.cpp
                 # Mac OS
                 sed -e :a -e '$d;N;1ba' -e 'P;D' $TEMPLATE_PATH >> $1/$1.cpp
@@ -181,6 +181,11 @@ function create {
 }
 
 function clean {
+    if [ ! -d $1 ]; then
+        echo "${RED}** Folder $1 not found! **${NC}"
+        return
+    fi
+
     mv $1/$1.cpp .
     STATEMENT="Moving file $1/$1.cpp"
     printPad $STATEMENT
