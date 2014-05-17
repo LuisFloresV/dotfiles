@@ -34,3 +34,4 @@ alias sl=ls # often screw this up
 
 alias afind='ack-grep -il'
 
+alias ip='ipconfig getifaddr en0'
