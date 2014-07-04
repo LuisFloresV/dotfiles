@@ -4,7 +4,7 @@
 
 ## CONFIGURATION ##
 TEMPLATE=true
-TEMPLATE_PATH="template.cpp"
+TEMPLATE_PATH="/Users/luisflores/Developer/References/template.cpp"
 
 # USACO
 USACO_USERNAME="aklovo1"
@@ -119,6 +119,11 @@ function c {
 }
 
 function create {
+    if [ -z "$1" ]; then
+      echo "${RED}** No argument supplied! **${NC}"
+      return
+    fi
+
     # ARGUMENTS SUPPORTED:
     # - USACO (It will create the header)
     FORMAT=$2
