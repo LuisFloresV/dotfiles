@@ -9,6 +9,7 @@ GREP_OPTIONS="--color=auto"
 grep-flag-available() {
     echo | grep $1 "" >/dev/null 2>&1
 }
+
 if grep-flag-available --exclude-dir=.cvs; then
     for PATTERN in .cvs .git .hg .svn; do
         GREP_OPTIONS+=" --exclude-dir=$PATTERN"
