@@ -1,4 +1,4 @@
-# Path to your oh-my-zsh configuration.
+# Path to your zsh configuration.
 ZSH=$HOME/.zsh
 
 # Set name of the theme to load.
@@ -15,4 +15,7 @@ plugins=(git contest)
 source $ZSH/zsh.sh
 
 # User configuration
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+export ANDROID_HOME="/Users/luisfcofv/Library/Android/sdk/"
+export ANDROID_NDK="/Users/luisfcofv/Library/Android/android-ndk-r10d/"
+export ANDROID="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_NDK"
+export PATH="$PATH:$ANDROID:/usr/local/bin:/usr/local/sbin"
