@@ -5,9 +5,10 @@ import math, subprocess
 
 p = subprocess.Popen(["ioreg", "-rc", "AppleSmartBattery"], stdout=subprocess.PIPE)
 output = p.communicate()[0]
+properties = output.splitlines()
 
-o_max = [l for l in output.splitlines() if 'MaxCapacity' in l][0]
-o_cur = [l for l in output.splitlines() if 'CurrentCapacity' in l][0]
+o_max = [l for l in properties if "MaxCapacity" in l.decode('utf-8')][0].decode("utf-8")
+o_cur = [l for l in properties if "CurrentCapacity" in l.decode("utf-8")][0].decode("utf-8")
 
 b_max = float(o_max.rpartition('=')[-1].strip())
 b_cur = float(o_cur.rpartition('=')[-1].strip())
@@ -28,6 +29,12 @@ color_green = '%{[32m%}'
 color_yellow = '%{[1;33m%}'
 color_red = '%{[31m%}'
 color_reset = '%{[00m%}'
+
+color_green = color_green.encode('utf-8')
+color_yellow = color_yellow.encode('utf-8')
+color_red = color_red.encode('utf-8')
+color_reset = color_reset.encode('utf-8')
+
 color_out = (
     color_green if len(filled) > 6
     else color_yellow if len(filled) > 4
@@ -35,4 +42,8 @@ color_out = (
 )
 
 out = color_out + out + color_reset
-sys.stdout.write(out)
+
+try:
+    sys.stdout.write(out.decode('utf-8'))
+except UnicodeEncodeError:
+    sys.stdout.write(out)
