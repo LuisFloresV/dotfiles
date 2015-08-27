@@ -1,4 +1,5 @@
 function git_prompt_info() {
+
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
@@ -19,7 +20,7 @@ function battery_charge() {
 function put_spacing() {
   local git=$(git_prompt_info)
   if [ ${#git} != 0 ]; then
-    ((git=${#git} - 10))
+    ((git=${#git} - 5))
   else
     git=0
   fi
@@ -43,7 +44,7 @@ function put_spacing() {
 
 function precmd() {
 print -rP '
-$fg[cyan]%m: $fg[yellow]$(get_pwd)$(put_spacing)$(git_prompt_info) $(battery_charge)'
+$fg[cyan]%m: $fg[yellow]$(get_pwd)$(put_spacing)$(git-radar --zsh --fetch) $(battery_charge)'
 }
 
 PROMPT='%{$reset_color%} → '

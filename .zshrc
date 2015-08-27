@@ -16,6 +16,5 @@ source $ZSH/zsh.sh
 
 # User configuration
 export ANDROID_HOME="/Users/luisfcofv/Library/Android/sdk/"
-export ANDROID_NDK="/Users/luisfcofv/Library/Android/android-ndk-r10d/"
 export ANDROID="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_NDK"
 export PATH="$PATH:$ANDROID:/usr/local/bin:/usr/local/sbin"
