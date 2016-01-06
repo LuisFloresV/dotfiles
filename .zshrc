@@ -1,20 +1,24 @@
-# Path to your zsh configuration.
-ZSH=$HOME/.zsh
+# Path to your zsh installation.
+export ZSH=$HOME/.zsh
 
-# Set name of the theme to load.
-# Look in ~/.zsh/themes/
-ZSH_THEME="columns"
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir rbenv vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv time)
 
-# Comment following line if you don't want red dots to be displayed while waiting for completion
-COMPLETION_WAITING_DOTS="true"
+POWERLEVEL9K_DIR_BACKGROUND='white'
 
-# Which plugins would you like to load? (plugins can be found in ~/.zsh/plugins/*)
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git contest)
+# User configuration
+export ANDROID_HOME="$HOME/Library/Android/sdk/"
+export ANDROID="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_NDK"
+export PATH="$PATH:$ANDROID:/usr/local/bin:/usr/local/sbin"
 
 source $ZSH/zsh.sh
 
-# User configuration
-export ANDROID_HOME="/Users/luisfcofv/Library/Android/sdk/"
-export ANDROID="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_NDK"
-export PATH="$PATH:$ANDROID:/usr/local/bin:/usr/local/sbin"
+# You may need to manually set your language environment
+export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='mvim'
+fi
