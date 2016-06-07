@@ -49,6 +49,10 @@ alias whereami=display_info
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
+alias c='clear'
+
+alias server='python -m SimpleHTTPServer 8000'
+alias ip='ipconfig getifaddr en0'
 
 # zsh is able to auto-do some kungfoo
 # depends on the SUFFIX :)
@@ -83,4 +87,3 @@ fi
 
 # Make zsh know about hosts already accessed by SSH
 zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
-
