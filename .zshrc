@@ -6,6 +6,11 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv time)
 
 POWERLEVEL9K_DIR_BACKGROUND='white'
 
+# Add rbenv to bash
+if which rbenv > /dev/null; then
+  eval "$(rbenv init -)";
+fi
+
 # User configuration
 export ANDROID_HOME="$HOME/Library/Android/sdk/"
 export ANDROID="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_NDK"
